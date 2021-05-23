@@ -42,7 +42,7 @@ public class Pedido implements Serializable {
 	
 	@OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private Pagamento pagamento;
-	
+		
 	public Pedido() {
 		super();
 	}
@@ -100,6 +100,14 @@ public class Pedido implements Serializable {
 
 	public Set<ItemPedido> getItens(){
 		return itens;
+	}
+	
+	public Double getTotal() {
+		double soma = 0.0;
+		for (ItemPedido ip : itens) {
+			soma += ip.getSubTotal();
+		}
+		return soma;
 	}
 
 	@Override
