@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.estudandoemcasa.curso.entidades.Usuario;
 import com.estudandoemcasa.curso.repositorios.UsuarioRepositorio;
+import com.estudandoemcasa.curso.servicos.exceptions.DataBaseException;
 import com.estudandoemcasa.curso.servicos.exceptions.RecursoNaoEncontradoException;
 
 @Service
@@ -33,7 +36,13 @@ public class UsuarioServicos {
 	}
 	
 	public void delete(Long id) {
-		repositorio.deleteById(id);
+		try {
+			repositorio.deleteById(id);
+		} catch(EmptyResultDataAccessException e) {
+			throw new RecursoNaoEncontradoException(id);
+		} catch(DataIntegrityViolationException ex) {
+			throw new DataBaseException(ex.getMessage());
+		}
 	}
 	
 	public Usuario update(Long id, Usuario usuario) {
