@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.estudandoemcasa.curso.entidades.Usuario;
 import com.estudandoemcasa.curso.repositorios.UsuarioRepositorio;
+import com.estudandoemcasa.curso.servicos.exceptions.RecursoNaoEncontradoException;
 
 @Service
 public class UsuarioServicos {
@@ -21,7 +22,10 @@ public class UsuarioServicos {
 	
 	public Usuario procurarPorId(Long id) {
 		Optional<Usuario> obj = repositorio.findById(id);
-		return obj.get();
+								/*
+								 * Lambda
+								 */
+		return obj.orElseThrow(() -> new RecursoNaoEncontradoException(id));
 	}
 	
 	public Usuario insert(Usuario obj) {
